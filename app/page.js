@@ -16,14 +16,14 @@ async function obtenerSubastasActivas() {
     .order("creado_en", { ascending: false });
 
   if (error) {
-    console.error(error);
-    return [];
+    console.error("Error consultando productos activos:", error);
+    return { productos: [], error };
   }
-  return data;
+  return { productos: data, error: null };
 }
 
 export default async function HomePage() {
-  const productos = await obtenerSubastasActivas();
+  const { productos, error } = await obtenerSubastasActivas();
 
   return (
     <main className="mx-auto max-w-5xl px-4 py-8">
@@ -41,7 +41,12 @@ export default async function HomePage() {
 
       <h2 className="mb-6 text-2xl font-semibold">Productos</h2>
 
-      {productos.length === 0 ? (
+      {error ? (
+        <p className="text-red-600">
+          No se pudo conectar con la base de datos ({error.message}). Si sos
+          el administrador, revisá las variables de entorno de Supabase.
+        </p>
+      ) : productos.length === 0 ? (
         <p className="text-black/60">
           No hay subastas activas en este momento.
         </p>
