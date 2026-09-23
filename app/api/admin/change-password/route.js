@@ -4,28 +4,35 @@ import { getSupabaseAdmin } from "@/lib/supabaseAdmin";
 import { haySesionAdminValida } from "@/lib/adminSession";
 
 export async function POST(request) {
-  const supabaseAdmin = getSupabaseAdmin();
   if (!haySesionAdminValida()) {
     return NextResponse.json({ error: "No autorizado." }, { status: 401 });
   }
+  try {
+    const { nuevaPassword } = await request.json();
+    if (!nuevaPassword || nuevaPassword.length < 6) {
+      return NextResponse.json(
+        { error: "La contraseña nueva debe tener al menos 6 caracteres." },
+        { status: 400 }
+      );
+    }
 
-  const { nuevaPassword } = await request.json();
-  if (!nuevaPassword || nuevaPassword.length < 6) {
+    const supabaseAdmin = getSupabaseAdmin();
+    const hash = await bcrypt.hash(nuevaPassword, 10);
+    const { error } = await supabaseAdmin
+      .from("admin_config")
+      .update({ password_hash: hash, actualizado_en: new Date().toISOString() })
+      .eq("id", 1);
+
+    if (error) {
+      return NextResponse.json({ error: "No se pudo actualizar." }, { status: 500 });
+    }
+
+    return NextResponse.json({ ok: true });
+  } catch (e) {
+    console.error("Error en /api/admin/change-password:", e);
     return NextResponse.json(
-      { error: "La contraseña nueva debe tener al menos 6 caracteres." },
-      { status: 400 }
+      { error: e?.message || "Error inesperado en el servidor." },
+      { status: 500 }
     );
   }
-
-  const hash = await bcrypt.hash(nuevaPassword, 10);
-  const { error } = await supabaseAdmin
-    .from("admin_config")
-    .update({ password_hash: hash, actualizado_en: new Date().toISOString() })
-    .eq("id", 1);
-
-  if (error) {
-    return NextResponse.json({ error: "No se pudo actualizar." }, { status: 500 });
-  }
-
-  return NextResponse.json({ ok: true });
 }

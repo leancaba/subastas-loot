@@ -164,12 +164,19 @@ function LoginAdmin({ onOk }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ password }),
       });
-      const data = await res.json();
+      let data = {};
+      try {
+        data = await res.json();
+      } catch {
+        // respuesta sin JSON (por ejemplo un 500 crudo del servidor)
+      }
       if (!res.ok) {
-        setError(data.error || "No se pudo iniciar sesión.");
+        setError(data.error || `No se pudo iniciar sesión (código ${res.status}).`);
         return;
       }
       onOk();
+    } catch (e) {
+      setError("No se pudo conectar con el servidor. Probá de nuevo.");
     } finally {
       setCargando(false);
     }
