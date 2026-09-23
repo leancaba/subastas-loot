@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Image from "next/image";
-import { supabase } from "@/lib/supabaseClient";
+import { getSupabase } from "@/lib/supabaseClient";
 
 const USUARIO_STORAGE_KEY = "loot_usuario";
 
@@ -30,6 +30,7 @@ export default function ProductoPage() {
 
   async function cargarProducto() {
     setCargando(true);
+    const supabase = getSupabase();
     const { data, error } = await supabase
       .from("productos")
       .select("*")

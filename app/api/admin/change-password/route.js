@@ -1,9 +1,10 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
-import { supabaseAdmin } from "@/lib/supabaseAdmin";
+import { getSupabaseAdmin } from "@/lib/supabaseAdmin";
 import { haySesionAdminValida } from "@/lib/adminSession";
 
 export async function POST(request) {
+  const supabaseAdmin = getSupabaseAdmin();
   if (!haySesionAdminValida()) {
     return NextResponse.json({ error: "No autorizado." }, { status: 401 });
   }

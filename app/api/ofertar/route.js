@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
-import { supabaseAdmin } from "@/lib/supabaseAdmin";
+import { getSupabaseAdmin } from "@/lib/supabaseAdmin";
 
 export async function POST(request) {
+  const supabaseAdmin = getSupabaseAdmin();
   const { productoId, usuarioId, monto } = await request.json();
 
   if (!productoId || !usuarioId || !monto) {

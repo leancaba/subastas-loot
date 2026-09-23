@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
-import { supabaseAdmin } from "@/lib/supabaseAdmin";
+import { getSupabaseAdmin } from "@/lib/supabaseAdmin";
 import { haySesionAdminValida } from "@/lib/adminSession";
 
 export async function POST(_request, { params }) {
+  const supabaseAdmin = getSupabaseAdmin();
   if (!haySesionAdminValida()) {
     return NextResponse.json({ error: "No autorizado." }, { status: 401 });
   }

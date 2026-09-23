@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { supabase } from "@/lib/supabaseClient";
+import { getSupabase } from "@/lib/supabaseClient";
 
 // Siempre datos frescos (los precios cambian todo el tiempo) y sin
 // intentar pre-renderizar esta página en el build, que no tiene acceso
@@ -8,6 +8,7 @@ import { supabase } from "@/lib/supabaseClient";
 export const dynamic = "force-dynamic";
 
 async function obtenerSubastasActivas() {
+  const supabase = getSupabase();
   const { data, error } = await supabase
     .from("productos")
     .select("id, nombre, marca, precio_actual, foto1")

@@ -1,9 +1,10 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
-import { supabaseAdmin } from "@/lib/supabaseAdmin";
+import { getSupabaseAdmin } from "@/lib/supabaseAdmin";
 import { crearSesionAdmin } from "@/lib/adminSession";
 
 export async function POST(request) {
+  const supabaseAdmin = getSupabaseAdmin();
   const { password } = await request.json();
   if (!password) {
     return NextResponse.json({ error: "Ingresá la contraseña." }, { status: 400 });

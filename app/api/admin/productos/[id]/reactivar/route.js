@@ -1,11 +1,12 @@
 import { NextResponse } from "next/server";
-import { supabaseAdmin } from "@/lib/supabaseAdmin";
+import { getSupabaseAdmin } from "@/lib/supabaseAdmin";
 import { haySesionAdminValida } from "@/lib/adminSession";
 
 // Se usa cuando el ganador no finaliza la operación dentro de las 72hs
 // (o cualquier otro motivo) y el producto vuelve a subastarse desde cero:
 // vuelve a "activa" y el precio se reinicia al precio base.
 export async function POST(_request, { params }) {
+  const supabaseAdmin = getSupabaseAdmin();
   if (!haySesionAdminValida()) {
     return NextResponse.json({ error: "No autorizado." }, { status: 401 });
   }
