@@ -18,6 +18,7 @@ export default function ProductoPage() {
   const [monto, setMonto] = useState("");
   const [mensaje, setMensaje] = useState(null);
   const [enviandoOferta, setEnviandoOferta] = useState(false);
+  const [errorCarga, setErrorCarga] = useState(null);
 
   useEffect(() => {
     const guardado = window.localStorage.getItem(USUARIO_STORAGE_KEY);
@@ -30,15 +31,25 @@ export default function ProductoPage() {
 
   async function cargarProducto() {
     setCargando(true);
-    const supabase = getSupabase();
-    const { data, error } = await supabase
-      .from("productos")
-      .select("*")
-      .eq("id", id)
-      .eq("estado", "activa")
-      .single();
-    if (!error) setProducto(data);
-    setCargando(false);
+    setErrorCarga(null);
+    try {
+      const supabase = getSupabase();
+      const { data, error } = await supabase
+        .from("productos")
+        .select("*")
+        .eq("id", id)
+        .eq("estado", "activa")
+        .single();
+      if (error) {
+        setErrorCarga(error.message);
+      } else {
+        setProducto(data);
+      }
+    } catch (e) {
+      setErrorCarga(e?.message || "No se pudo conectar con el servidor.");
+    } finally {
+      setCargando(false);
+    }
   }
 
   function cerrarSesionUsuario() {
@@ -89,6 +100,13 @@ export default function ProductoPage() {
   if (cargando) {
     return <main className="mx-auto max-w-3xl px-4 py-10">Cargando...</main>;
   }
+  if (errorCarga) {
+    return (
+      <main className="mx-auto max-w-3xl px-4 py-10 text-red-600">
+        No se pudo cargar el producto ({errorCarga}).
+      </main>
+    );
+  }
   if (!producto) {
     return (
       <main className="mx-auto max-w-3xl px-4 py-10">
@@ -104,7 +122,7 @@ export default function ProductoPage() {
   return (
     <main className="mx-auto max-w-3xl px-4 py-6">
       <h1 className="text-2xl font-extrabold tracking-tight">
-        SUBASTAS <span className="text-loot-orange">LOOT</span>
+        <img src="/logo.png" alt="Subastas Loot" className="h-7 w-auto" />
       </h1>
 
       <h2 className="mt-6 text-3xl font-semibold">{producto.nombre}</h2>
@@ -143,15 +161,15 @@ export default function ProductoPage() {
         </button>
       </div>
 
-      <div className="mt-6 min-h-[320px] rounded-2xl bg-loot-orange/90 p-4">
+      <div className="mt-6 min-h-[320px]">
         {tab === "fotos" && fotos.length > 0 && (
           <div>
-            <div className="relative aspect-[3/4] w-full overflow-hidden rounded-xl bg-white/20">
+            <div className="relative aspect-[3/4] w-full overflow-hidden rounded-2xl bg-black/5">
               <Image
                 src={fotos[fotoActiva]}
                 alt={producto.nombre}
                 fill
-                className="object-contain"
+                className="object-cover"
                 unoptimized
               />
             </div>
@@ -162,7 +180,7 @@ export default function ProductoPage() {
                     key={i}
                     onClick={() => setFotoActiva(i)}
                     className={`h-2.5 w-2.5 rounded-full ${
-                      i === fotoActiva ? "bg-white" : "bg-white/40"
+                      i === fotoActiva ? "bg-loot-black" : "bg-black/20"
                     }`}
                     aria-label={`Foto ${i + 1}`}
                   />
@@ -173,7 +191,7 @@ export default function ProductoPage() {
         )}
 
         {tab === "video" && (
-          <div className="aspect-[3/4] w-full overflow-hidden rounded-xl bg-black">
+          <div className="aspect-[3/4] w-full overflow-hidden rounded-2xl bg-black">
             <iframe
               src={producto.video_360}
               className="h-full w-full"
@@ -184,7 +202,9 @@ export default function ProductoPage() {
         )}
 
         {tab === "info" && (
-          <p className="whitespace-pre-wrap text-black">{producto.info}</p>
+          <p className="whitespace-pre-wrap text-center text-black">
+            {producto.info}
+          </p>
         )}
       </div>
 

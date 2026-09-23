@@ -54,7 +54,7 @@ export default function AdminPage() {
     <main className="mx-auto max-w-3xl px-4 py-6">
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-2xl font-extrabold tracking-tight">
-          SUBASTAS <span className="text-loot-orange">LOOT</span>
+          <img src="/logo.png" alt="Subastas Loot" className="h-7 w-auto" />
         </h1>
         <div className="flex items-center gap-3">
           <button

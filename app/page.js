@@ -29,7 +29,7 @@ export default async function HomePage() {
     <main className="mx-auto max-w-5xl px-4 py-8">
       <div className="mb-8 flex items-center justify-between">
         <h1 className="text-3xl font-extrabold tracking-tight">
-          SUBASTAS <span className="text-loot-orange">LOOT</span>
+          <img src="/logo.png" alt="Subastas Loot" className="h-8 w-auto" />
         </h1>
         <Link
           href="/admin"
