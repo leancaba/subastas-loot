@@ -1,0 +1,34 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Helvetica, Arial, sans-serif;
+}
+
+.btn-pill {
+  border-radius: 999px;
+  padding: 0.6rem 1.4rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  transition: opacity 0.15s ease;
+}
+.btn-pill:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.btn-pill:not(:disabled):hover {
+  opacity: 0.85;
+}
+
+.input-pill {
+  width: 100%;
+  border-radius: 999px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  padding: 0.7rem 1.2rem;
+  outline: none;
+}
+.input-pill:focus {
+  border-color: #1abc9c;
+}
