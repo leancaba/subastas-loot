@@ -166,12 +166,37 @@ export default function ProductoPage() {
           <div>
             <div className="relative aspect-[3/4] w-full overflow-hidden rounded-2xl bg-black/5">
               <Image
+                key={fotoActiva}
                 src={fotos[fotoActiva]}
                 alt={producto.nombre}
                 fill
                 className="object-cover"
                 unoptimized
               />
+              {fotos.length > 1 && (
+                <>
+                  <button
+                    onClick={() =>
+                      setFotoActiva((i) => (i - 1 + fotos.length) % fotos.length)
+                    }
+                    aria-label="Foto anterior"
+                    className="absolute left-2 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-black/50 text-white"
+                  >
+                    <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2.5">
+                      <path d="M15 18l-6-6 6-6" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </button>
+                  <button
+                    onClick={() => setFotoActiva((i) => (i + 1) % fotos.length)}
+                    aria-label="Foto siguiente"
+                    className="absolute right-2 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-black/50 text-white"
+                  >
+                    <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2.5">
+                      <path d="M9 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </button>
+                </>
+              )}
             </div>
             {fotos.length > 1 && (
               <div className="mt-3 flex justify-center gap-2">
