@@ -39,11 +39,11 @@ export default function ProductoPage() {
         .select("*")
         .eq("id", id)
         .eq("estado", "activa")
-        .single();
+        .maybeSingle();
       if (error) {
         setErrorCarga(error.message);
       } else {
-        setProducto(data);
+        setProducto(data); // null si no existe o no está activa: se muestra "no disponible"
       }
     } catch (e) {
       setErrorCarga(e?.message || "No se pudo conectar con el servidor.");
